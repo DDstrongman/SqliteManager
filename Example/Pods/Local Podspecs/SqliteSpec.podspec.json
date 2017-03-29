@@ -1,0 +1,22 @@
+{
+  "name": "SqliteSpec",
+  "version": "0.1.0",
+  "summary": "A short description of SqliteSpec.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/DDStrongman/SqliteSpec",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "DDStrongman": "lishengshu@xinxindai.com"
+  },
+  "source": {
+    "git": "https://github.com/DDStrongman/SqliteSpec.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SqliteSpec/Classes/**/*"
+}
