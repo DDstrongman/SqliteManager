@@ -1,6 +1,0 @@
-framework module SqliteSpec {
-  umbrella header "SqliteSpec-umbrella.h"
-
-  export *
-  module * { export * }
-}
