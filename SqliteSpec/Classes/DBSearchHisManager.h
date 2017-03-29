@@ -98,12 +98,12 @@
 - (void)closeDB;
 
 
-/**
- 查询所有该表名下的数据
-
- @param tableName 表名
- @return 返回查询结果{title： content：}
- */
-- (NSDictionary *)queryAllQuickMenuWithTableName:(NSString *)tableName;
+///**
+// 查询所有该表名下的数据
+//
+// @param tableName 表名
+// @return 返回查询结果{title： content：}
+// */
+//- (NSDictionary *)queryAllQuickMenuWithTableName:(NSString *)tableName;
 
 @end

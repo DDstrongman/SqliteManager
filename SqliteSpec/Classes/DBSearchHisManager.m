@@ -195,22 +195,22 @@
     [self.searchHisDB close];
 }
 
-#pragma mark - 查询所有
-- (NSDictionary *)queryAllQuickMenuWithTableName:(NSString *)tableName {
-    FMResultSet *result = [self SearchAll:tableName];
-    NSMutableDictionary *dic = @{}.mutableCopy;
-    while (result.next) {
-        
-        NSString *titleStr = [result stringForColumn:quickHelpTitle];
-        [dic setValue:[titleStr jsonStrConvertToObj] forKey:quickHelpTitle];
-        
-        NSString *contentStr = [result stringForColumn:quickHelpContent];
-        [dic setValue:[contentStr jsonStrConvertToObj] forKey:quickHelpContent];
-        
-        NSString *myQuickMenuStr = [result stringForColumn:myQuickMenu];
-        [dic setValue:[myQuickMenuStr jsonStrConvertToObj] forKey:myQuickMenu];
-    }
-    return dic;
-}
+//#pragma mark - 查询所有
+//- (NSDictionary *)queryAllQuickMenuWithTableName:(NSString *)tableName {
+//    FMResultSet *result = [self SearchAll:tableName];
+//    NSMutableDictionary *dic = @{}.mutableCopy;
+//    while (result.next) {
+//        
+//        NSString *titleStr = [result stringForColumn:quickHelpTitle];
+//        [dic setValue:[titleStr jsonStrConvertToObj] forKey:quickHelpTitle];
+//        
+//        NSString *contentStr = [result stringForColumn:quickHelpContent];
+//        [dic setValue:[contentStr jsonStrConvertToObj] forKey:quickHelpContent];
+//        
+//        NSString *myQuickMenuStr = [result stringForColumn:myQuickMenu];
+//        [dic setValue:[myQuickMenuStr jsonStrConvertToObj] forKey:myQuickMenu];
+//    }
+//    return dic;
+//}
 
 @end
