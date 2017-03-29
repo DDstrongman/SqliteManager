@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <FMDB/FMDB.h>
 
 @interface DBSearchHisManager : NSObject
 
 + (DBSearchHisManager *)ShareInstance;
 
-@property (nonatomic,strong)FMDatabase *searchHisDB;
+@property (nonatomic,strong) FMDatabase *searchHisDB;
 
 #pragma 新的设计将要用到的函数
 
