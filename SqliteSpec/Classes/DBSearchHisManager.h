@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FMDB/FMDB.h>
 
 @interface DBSearchHisManager : NSObject
 

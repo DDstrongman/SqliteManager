@@ -7,7 +7,8 @@
 //
 
 #import "DBSearchHisManager.h"
-#import "FMDB.h"
+#import <FMDB/FMDB.h>
+#import "NSObject+Ext.h"
 
 @implementation DBSearchHisManager
 
