@@ -7,6 +7,7 @@
 //
 
 #import "DBSearchHisManager.h"
+#import "FMDB.h"
 
 @implementation DBSearchHisManager
 
