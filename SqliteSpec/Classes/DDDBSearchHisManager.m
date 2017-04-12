@@ -7,7 +7,7 @@
 //
 
 #import "DDDBSearchHisManager.h"
-#import "NSObject+Ext.h"
+#import "DDNSObject+Ext.h"
 
 @implementation DDDBSearchHisManager
 
