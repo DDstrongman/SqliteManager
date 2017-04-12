@@ -1,12 +1,12 @@
 //
-//  NSObject+Ext.m
+//  DDNSObject+Ext.m
 //  XiYuWang
 //
 //  Created by 李胜书 on 16/5/19.
 //  Copyright © 2016年 Ehsy_Sanli. All rights reserved.
 //
 
-#import "NSObject+Ext.h"
+#import "DDNSObject+Ext.h"
 
 @implementation NSObject (Ext)
 

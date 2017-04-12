@@ -1,18 +1,18 @@
 //
-//  DBManager.h
+//  DDDBManager.h
 //  YZDoctors
 //
 //  Created by lishengshu on 15-7-29.
 //  Copyright (c) 2015年 李胜书. All rights reserved.
 //
 
-#import "DBSearchHisManager.h"
+#import "DDDBSearchHisManager.h"
 #import "NSObject+Ext.h"
 
-@implementation DBSearchHisManager
+@implementation DDDBSearchHisManager
 
-+ (DBSearchHisManager *)ShareInstance{
-    static DBSearchHisManager *sharedDBManagerInstance = nil;
++ (DDDBSearchHisManager *)ShareInstance{
+    static DDDBSearchHisManager *sharedDBManagerInstance = nil;
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
         sharedDBManagerInstance = [[self alloc] init];

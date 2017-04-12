@@ -1,5 +1,5 @@
 //
-//  DBManager.h
+//  DDDBManager.h
 //  YZDoctors
 //
 //  Created by lishengshu on 15-7-29.
@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <FMDB/FMDB.h>
 
-@interface DBSearchHisManager : NSObject
+@interface DDDBSearchHisManager : NSObject
 
-+ (DBSearchHisManager *)ShareInstance;
++ (DDDBSearchHisManager *)ShareInstance;
 
 @property (nonatomic,strong) FMDatabase *searchHisDB;
 

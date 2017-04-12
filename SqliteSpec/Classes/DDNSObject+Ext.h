@@ -1,5 +1,5 @@
 //
-//  NSObject+Ext.h
+//  DDNSObject+Ext.h
 //  XiYuWang
 //
 //  Created by 李胜书 on 16/5/19.
