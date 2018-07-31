@@ -34,10 +34,31 @@
  检查本地数据库表是否存在，如不存在，以数组作为键名建表，默认数组第一个元素作为主键
 
  @param tName 表名
- @param keyArr 数据库参数数组,数组第一个元素是主键名
+ @param keyArr 数据库参数数组,数组第一个元素是主键名，NSInteger类型自增长
  @return 返回是否成功的bool
  */
-- (BOOL)isTableExist:(NSString *)tName TKeyArr:(NSArray *)keyArr;
+- (BOOL)isTableExist:(NSString *)tName
+             TKeyArr:(NSArray *)keyArr;
+
+/**
+ 另起线程检查本地数据库表是否存在，如不存在，以数组作为键名建表，默认数组第一个元素作为主键，NSInteger类型自增长
+
+ @param tName 表名
+ @param keyArr 表结构
+ @return 返回结果
+ */
+- (BOOL)isTableExistQueue:(NSString *)tName
+                  TKeyArr:(NSArray *)keyArr;
+
+/**
+ 另起线程检查本地数据库表是否存在，如不存在，以传入的Model模型作为键名建表，默认数组第一个元素作为主键，NSInteger类型自增长
+
+ @param tName 表名
+ @param tableClass 模型
+ @return 返回结果
+ */
+- (BOOL)isTableExistQueue:(NSString *)tName
+                   TModel:(Class)tableClass;
 
 /**
  根据字典添加数据入库，如果不存在，则新增，如果已存在，更新数据库
@@ -46,7 +67,24 @@
  @param dataDic 数据的字典
  @return 返回结果bool，成功与否
  */
-- (BOOL)addTableObj:(NSString *)tableName DataDic:(NSDictionary *)dataDic;
+- (BOOL)insertTableObj:(NSString *)tableName
+               DataDic:(NSDictionary *)dataDic;
+/**
+ 根据字典直接添加数据入库，不考虑重复情况，另起线程
+
+ @param tableName 表名
+ @param dataDic 字典名
+ */
+- (void)directInsertTableObjQueue:(NSString *)tableName
+                          DataDic:(NSDictionary *)dataDic;
+/**
+ 根据字典直接添加数据入库，如果不存在，则新增，如果已存在，更新数据库，另起线程
+
+ @param tableName 表名
+ @param dataDic 字典名
+ */
+- (void)insertTableObjQueue:(NSString *)tableName
+                    DataDic:(NSDictionary *)dataDic;
 /**
  获取某一表的某一数值的记录
 
@@ -55,7 +93,9 @@
  @param searchKeyWords 搜索的关键字
  @return 返回的结果
  */
-- (FMResultSet *)SearchOne:(NSString *)tableName SQLKeyWord:(NSString *)sqlKeyWord SearchKeyWords:(NSString *)searchKeyWords;
+- (FMResultSet *)SearchOne:(NSString *)tableName
+                SQLKeyWord:(NSString *)sqlKeyWord
+            SearchKeyWords:(NSString *)searchKeyWords;
 /**
  返回某一表的最后10行记录
 
@@ -91,19 +131,14 @@
  @param keyWord 要删除的字段的对应值
  @return 返回删除结果
  */
-- (BOOL)deleTableOjb:(NSString *)tableName SQLKey:(NSString *)sqlKey KeyWord:(NSString*)keyWord;
+- (BOOL)deleTableOjb:(NSString *)tableName
+              SQLKey:(NSString *)sqlKey
+             KeyWord:(NSString*)keyWord;
 /**
  关闭数据库
  */
 - (void)closeDB;
 
 
-///**
-// 查询所有该表名下的数据
-//
-// @param tableName 表名
-// @return 返回查询结果{title： content：}
-// */
-//- (NSDictionary *)queryAllQuickMenuWithTableName:(NSString *)tableName;
 
 @end
