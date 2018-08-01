@@ -47,7 +47,7 @@
  @param keyArr 表结构
  @return 返回结果
  */
-- (BOOL)isTableExistQueue:(NSString *)tName
+- (void)isTableExistQueue:(NSString *)tName
                   TKeyArr:(NSArray *)keyArr;
 
 /**

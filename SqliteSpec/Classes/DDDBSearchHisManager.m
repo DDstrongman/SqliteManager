@@ -72,32 +72,30 @@
     }
 }
 
-- (BOOL)isTableExistQueue:(NSString *)tName
+- (void)isTableExistQueue:(NSString *)tName
                   TKeyArr:(NSArray *)keyArr {
-    if (![self isDBReady])
-        return NO;
-    if(![self.searchHisDB tableExists:tName]) {
+    if ([self isDBReady]) {
         if (!dbQueue) {
             dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
         }
-        __block NSString *tempSql = @"";
-        [keyArr enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (idx == 0) {
-                tempSql = [NSString stringWithFormat:@"(%@ INTEGER PRIMARY KEY AUTOINCREMENT",obj];
-            }else if(idx < keyArr.count - 1) {
-                tempSql = [NSString stringWithFormat:@"%@,%@ TEXT",tempSql,obj];
+        [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+            if(![db tableExists:tName]) {
+                __block NSString *tempSql = @"";
+                [keyArr enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (idx == 0) {
+                        tempSql = [NSString stringWithFormat:@"(%@ INTEGER PRIMARY KEY AUTOINCREMENT",obj];
+                    }else if(idx < keyArr.count - 1) {
+                        tempSql = [NSString stringWithFormat:@"%@,%@ TEXT",tempSql,obj];
+                    }else {
+                        tempSql = [NSString stringWithFormat:@"%@,%@ TEXT)",tempSql,obj];
+                    }
+                }];
+                NSString *sql = [NSString stringWithFormat:@"create table %@%@",tName,tempSql];
+                    [db executeUpdate:sql];
             }else {
-                tempSql = [NSString stringWithFormat:@"%@,%@ TEXT)",tempSql,obj];
+                //已经存在
             }
         }];
-        NSString *sql = [NSString stringWithFormat:@"create table %@%@",tName,tempSql];
-        [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-            [db executeUpdate:sql];
-        }];
-        return YES;
-    }else {
-        //已经存在
-        return YES;
     }
 }
 
