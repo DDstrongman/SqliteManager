@@ -15,8 +15,8 @@
 
 - (void)assginToPropertyWithDictionary: (NSDictionary *) data;
 
-// obj->json
-- (NSString *)objConvertToJsonStr;
+// obj->string
+- (id)objConvertToStr;
 // json->obj
 - (id)jsonStrConvertToObj;
 

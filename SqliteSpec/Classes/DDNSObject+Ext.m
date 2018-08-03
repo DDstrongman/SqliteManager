@@ -78,12 +78,13 @@
 
 
 /**************************************/
-
-- (NSString *)objConvertToJsonStr {
+- (id)objConvertToStr {
     if (self == nil) {
         return @"";
     }else if ([self isKindOfClass:[NSString class]]) {
         return (NSString *)self;
+    }else if ([self isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)self) stringValue];
     }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
 }
