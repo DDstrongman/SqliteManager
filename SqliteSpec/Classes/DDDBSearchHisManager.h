@@ -41,6 +41,18 @@
                     TName:(NSString *)tName
                   DataDic:(NSDictionary *)dataDic;
 /**
+ 异步搜索返回结果
+ 
+ @param result 返回更新结果
+ @param tName 表名
+ @param search 更新数据的条件字典或条件类
+ @param data 更新数据的字典或类
+ */
+- (void)tableUpdateResult:(BOOL)result
+                    TName:(NSString *)tName
+                   Search:(id)search
+                  DataDic:(id)data;
+/**
  异步删除返回表结果
  
  @param result 返回删除表结果
@@ -134,11 +146,11 @@
  根据字典添加数据入库，如果不存在，则新增，如果已存在，返回no
  
  @param tName 表名
- @param tableClass 数据的模型类
+ @param dataClass 数据的模型类
  @return 返回结果bool，成功与否
  */
 - (BOOL)insertTableObj:(NSString *)tName
-             DataModel:(Class)tableClass;
+             DataModel:(Class)dataClass;
 /**
  根据字典添加数据入库，直接新增，不管重复
  
@@ -152,11 +164,11 @@
  根据模型添加数据入库，直接新增，不管重复
  
  @param tName 表名
- @param tableClass 数据的模型类
+ @param dataClass 数据的模型类
  @return 返回结果bool，成功与否
  */
 - (BOOL)directInsertTableObj:(NSString *)tName
-                   DataModel:(Class)tableClass;
+                   DataModel:(Class)dataClass;
 /**
  另起线程根据字典直接添加数据入库，不考虑重复情况，delegate通知异步处理结果
 
@@ -169,10 +181,10 @@
  另起线程根据字典直接添加数据入库，不考虑重复情况，delegate通知异步处理结果
  
  @param tName 表名
- @param tableClass 数据的模型类
+ @param dataClass 数据的模型类
  */
 - (void)directInsertTableObjQueue:(NSString *)tName
-                        DataModel:(Class)tableClass;
+                        DataModel:(Class)dataClass;
 /**
  根据字典直接添加数据入库，如果不存在，则新增，如果已存在，delegate返回失败，另起线程
 
@@ -185,10 +197,10 @@
  另起线程根据字典添加数据入库，重复情况delegate返回失败，delegate通知异步处理结果
  
  @param tName 表名
- @param tableClass 数据的模型类
+ @param dataClass 数据的模型类
  */
 - (void)insertTableObjQueue:(NSString *)tName
-                  DataModel:(Class)tableClass;
+                  DataModel:(Class)dataClass;
 #pragma mark - 数据库查询操作------------------------|*|*|*|*|*|
 /**
  通过字典获取某一表的某一项的记录
@@ -232,7 +244,7 @@
  @return 返回的记录
  */
 - (FMResultSet *)SearchLastNumber:(NSString *)tName
-                           Number:(NSInteger)number;
+                           Number:(long)number;
 /**
  异步返回某一表的最后number行记录,delegate返回结果
  
@@ -240,7 +252,7 @@
  @param number 最后多少行
  */
 - (void)SearchLastNumberQueue:(NSString *)tName
-                       Number:(NSInteger)number;
+                       Number:(long)number;
 /**
  搜索并返回某一表的所有字段数值
 
@@ -264,6 +276,49 @@
  异步获取当前打开的本地数据库的所有表名,delegate返回结果
  */
 - (void)SearchAllTableNameQueue;
+#pragma mark - 数据库更新操作------------------------|*|*|*|*|*|
+/**
+ 根据搜索字典更新数据库，如果不存在，返回no
+ 
+ @param tName 表名
+ @param searchDic 更新数据的条件字典
+ @param dataDic 数据的字典
+ @return 返回结果bool，成功与否
+ */
+- (BOOL)updateTableObj:(NSString *)tName
+             SearchDic:(NSDictionary *)searchDic
+               DataDic:(NSDictionary *)dataDic;
+/**
+ 根据搜索模型更新数据库，如果不存在，返回no
+ 
+ @param tName 表名
+ @param searchClass 更新数据的条件模型类
+ @param dataClass 数据的模型类
+ @return 返回结果bool，成功与否
+ */
+- (BOOL)updateTableObj:(NSString *)tName
+           SearchModel:(Class)searchClass
+             DataModel:(Class)dataClass;
+/**
+ 异步根据搜索字典更新数据，如果不存在，返回no，通过delegate返回结果
+ 
+ @param tName 表名
+ @param searchDic 更新数据的条件字典
+ @param dataDic 数据的模型类
+ */
+- (void)updateTableObjQueue:(NSString *)tName
+                  SearchDic:(NSDictionary *)searchDic
+                    DataDic:(NSDictionary *)dataDic;
+/**
+ 异步根据搜索模型更新数据入库，如果不存在，返回no，通过delegate返回结果
+ 
+ @param tName 表名
+ @param searchClass 更新数据的条件模型类
+ @param dataClass 数据的模型类
+ */
+- (void)updateTableObjQueue:(NSString *)tName
+                SearchModel:(Class)searchClass
+                  DataModel:(Class)dataClass;
 #pragma mark - 数据库删除操作------------------------|*|*|*|*|*|
 /**
  删除表

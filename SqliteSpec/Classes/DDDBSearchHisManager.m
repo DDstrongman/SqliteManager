@@ -139,9 +139,9 @@
 }
 
 - (BOOL)insertTableObj:(NSString *)tName
-             DataModel:(Class)tableClass {
+             DataModel:(Class)dataClass {
     return [self insertTableObj:tName
-                        DataDic:tableClass.mj_keyValues];
+                        DataDic:dataClass.mj_keyValues];
 }
 
 - (BOOL)directInsertTableObj:(NSString *)tName
@@ -158,9 +158,9 @@
 }
 
 - (BOOL)directInsertTableObj:(NSString *)tName
-                   DataModel:(Class)tableClass {
+                   DataModel:(Class)dataClass {
     return [self directInsertTableObj:tName
-                              DataDic:tableClass.mj_keyValues];
+                              DataDic:dataClass.mj_keyValues];
 }
 
 - (void)directInsertTableObjQueue:(NSString *)tName
@@ -193,9 +193,9 @@
 }
 
 - (void)directInsertTableObjQueue:(NSString *)tName
-                        DataModel:(Class)tableClass {
+                        DataModel:(Class)dataClass {
     [self directInsertTableObjQueue:tName
-                            DataDic:tableClass.mj_keyValues];
+                            DataDic:dataClass.mj_keyValues];
 }
 
 - (void)insertTableObjQueue:(NSString *)tName
@@ -240,9 +240,9 @@
 }
 
 - (void)insertTableObjQueue:(NSString *)tName
-                  DataModel:(Class)tableClass {
+                  DataModel:(Class)dataClass {
     [self insertTableObjQueue:tName
-                      DataDic:tableClass.mj_keyValues];
+                      DataDic:dataClass.mj_keyValues];
 }
 #pragma mark - 查询数据------------------------|*|*|*|*|*|
 //while ([messWithNumber next]) {
@@ -291,7 +291,7 @@
 }
 
 - (FMResultSet *)SearchLastNumber:(NSString *)tableName
-                           Number:(NSInteger)number {
+                           Number:(long)number {
     FMResultSet *messWithNumber;
     NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@ order by key DESC limit 0,%ld",tableName,number];
     if ([self.searchHisDB tableExists:tableName]) {
@@ -301,7 +301,7 @@
 }
 
 - (void)SearchLastNumberQueue:(NSString *)tName
-                       Number:(NSInteger)number {
+                       Number:(long)number {
     if (!dbQueue) {
         dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
     }
@@ -378,6 +378,61 @@
                                        TName:nil
                                      DataDic:nil];
     }];
+}
+#pragma mark - 更新表------------------------|*|*|*|*|*|
+- (BOOL)updateTableObj:(NSString *)tName
+             SearchDic:(NSDictionary *)searchDic
+               DataDic:(NSDictionary *)dataDic {
+    BOOL updateResult = NO;
+    NSString *updateSql = [self updateSQL:tName
+                                SearchDic:searchDic
+                                  DataDic:dataDic];
+    if ([self.searchHisDB tableExists:tName]) {
+        updateResult = [self.searchHisDB executeUpdate:updateSql];
+    }
+    return updateResult;
+}
+
+- (BOOL)updateTableObj:(NSString *)tName
+           SearchModel:(Class)searchClass
+             DataModel:(Class)dataClass {
+    return [self updateTableObj:tName
+                      SearchDic:searchClass.mj_keyValues
+                        DataDic:dataClass.mj_keyValues];
+}
+
+- (void)updateTableObjQueue:(NSString *)tName
+                  SearchDic:(NSDictionary *)searchDic
+                    DataDic:(NSDictionary *)dataDic {
+    if (!dbQueue) {
+        dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
+    }
+    DDWS(weakSelf)
+    [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        DDSS(strongSelf)
+        NSString *updateSql = [strongSelf updateSQL:tName
+                                          SearchDic:searchDic
+                                            DataDic:dataDic];
+        if ([db tableExists:tName]) {
+            [weakSelf.delegate tableUpdateResult:[db executeUpdate:updateSql]
+                                           TName:tName
+                                          Search:searchDic
+                                         DataDic:dataDic];
+        }else {
+            [weakSelf.delegate tableUpdateResult:NO
+                                           TName:tName
+                                          Search:searchDic
+                                         DataDic:dataDic];
+        }
+    }];
+}
+
+- (void)updateTableObjQueue:(NSString *)tName
+                SearchModel:(Class)searchClass
+                  DataModel:(Class)dataClass {
+    [self updateTableObj:tName
+               SearchDic:searchClass.mj_keyValues
+                 DataDic:dataClass.mj_keyValues];
 }
 #pragma mark - 删除表------------------------|*|*|*|*|*|
 - (BOOL)deleteTable:(NSString *)tName {
@@ -521,13 +576,13 @@
  根据字典生成更新sql
 
  @param tName 表名
- @param dataDic 更新参数字典
  @param searchDic 更新位置查询参数字典
+ @param dataDic 更新参数字典
  @return 返回生成的更新sql
  */
 - (NSString *)updateSQL:(NSString *)tName
-                DataDic:(NSDictionary *)dataDic
-              SearchDic:(NSDictionary *)searchDic {
+              SearchDic:(NSDictionary *)searchDic
+                DataDic:(NSDictionary *)dataDic {
     __block NSString *tempDataStr = @"";
     __block NSString *tempSearchStr = @"";
     [dataDic enumerateKeysAndObjectsUsingBlock:^(NSString *key,id value, BOOL * _Nonnull stop) {
