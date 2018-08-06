@@ -18,33 +18,44 @@
  @param result 异步的表结果
  @param tName 此结果的表名
  */
-- (void)tableReadyResult:(BOOL)result TName:(NSString *)tName;
+- (void)tableReadyResult:(BOOL)result
+                   TName:(NSString *)tName;
 /**
  异步表插入的结果
 
  @param result 插入结果
+ @param tName 表名
+ @param dataDic 数据的字典
  */
-- (void)tableInsertResult:(BOOL)result;
+- (void)tableInsertResult:(BOOL)result
+                    TName:(NSString *)tName
+                  DataDic:(NSDictionary *)dataDic;
 /**
  异步搜索返回结果
 
  @param result 返回搜索结果
+ @param tName 表名
+ @param dataDic 数据的字典
  */
-- (void)tableSearchResult:(id)result;
+- (void)tableSearchResult:(id)result
+                    TName:(NSString *)tName
+                  DataDic:(NSDictionary *)dataDic;
 /**
  异步删除返回表结果
  
  @param result 返回删除表结果
  @param tName 删除的表名
  */
-- (void)tableDeleteResult:(BOOL)result TName:(NSString *)tName;
+- (void)tableDeleteResult:(BOOL)result
+                    TName:(NSString *)tName;
 /**
  异步关闭数据库结果
 
  @param result 关闭数据库的结果
  @param dbName 关闭的db的名字
  */
-- (void)dbCloseResult:(BOOL)result DBName:(NSString *)dbName;
+- (void)dbCloseResult:(BOOL)result
+               DBName:(NSString *)dbName;
 
 @end;
 
@@ -111,7 +122,7 @@
                    TModel:(Class)tableClass;
 #pragma mark - 数据库插入更新操作------------------------|*|*|*|*|*|
 /**
- 根据字典添加数据入库，如果不存在，则新增，如果已存在，更新数据库
+ 根据字典添加数据入库，如果不存在，则新增，如果已存在，返回no
 
  @param tName 表名
  @param dataDic 数据的字典
@@ -120,7 +131,7 @@
 - (BOOL)insertTableObj:(NSString *)tName
                DataDic:(NSDictionary *)dataDic;
 /**
- 根据字典添加数据入库，如果不存在，则新增，如果已存在，更新数据库
+ 根据字典添加数据入库，如果不存在，则新增，如果已存在，返回no
  
  @param tName 表名
  @param tableClass 数据的模型类
@@ -248,12 +259,12 @@
 
  @return 返回的表名数组
  */
-- (NSMutableArray *)searchAllTableName;
+- (NSMutableArray *)SearchAllTableName;
 /**
  异步获取当前打开的本地数据库的所有表名,delegate返回结果
  */
-- (void)searchAllTableNameQueue;
-#pragma mark - 数据库删除操作
+- (void)SearchAllTableNameQueue;
+#pragma mark - 数据库删除操作------------------------|*|*|*|*|*|
 /**
  删除表
 
@@ -284,7 +295,7 @@
  */
 - (void)deleTableOjbQueue:(NSString *)tName
                 DeleteDic:(NSDictionary *)deleteDic;
-#pragma mark - 关闭数据库
+#pragma mark - 关闭数据库------------------------|*|*|*|*|*|
 /**
  关闭数据库
  */

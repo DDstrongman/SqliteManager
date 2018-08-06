@@ -176,12 +176,18 @@
                 DDSS(strongSelf)
                 NSString *insertsql = [strongSelf insertSQL:tName
                                                     DataDic:dataDic];
-                [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]];
+                [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
+                                               TName:tName
+                                             DataDic:dataDic];
             }else {
-                [weakSelf.delegate tableInsertResult:NO];
+                [weakSelf.delegate tableInsertResult:NO
+                                               TName:tName
+                                             DataDic:dataDic];
             }
         }else {
-            [weakSelf.delegate tableInsertResult:NO];
+            [weakSelf.delegate tableInsertResult:NO
+                                           TName:tName
+                                         DataDic:dataDic];
         }
     }];
 }
@@ -212,15 +218,23 @@
                 if (![searchResult next]) {
                     NSString *insertsql = [strongSelf insertSQL:tName
                                                         DataDic:dataDic];
-                    [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]];
+                    [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
+                                                   TName:tName
+                                                 DataDic:dataDic];
                 }else {
-                    [weakSelf.delegate tableInsertResult:NO];
+                    [weakSelf.delegate tableInsertResult:NO
+                                                   TName:tName
+                                                 DataDic:dataDic];
                 }
             }else {
-               [weakSelf.delegate tableInsertResult:NO];
+               [weakSelf.delegate tableInsertResult:NO
+                                              TName:tName
+                                            DataDic:dataDic];
             }
         }else {
-            [weakSelf.delegate tableInsertResult:NO];
+            [weakSelf.delegate tableInsertResult:NO
+                                           TName:tName
+                                         DataDic:dataDic];
         }
     }];
 }
@@ -264,7 +278,9 @@
         if ([db tableExists:tName]) {
             messWithNumber = [db executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber];
+        [weakSelf.delegate tableSearchResult:messWithNumber
+                                       TName:tName
+                                     DataDic:searchDic];
     }];
 }
 
@@ -296,7 +312,9 @@
         if ([db tableExists:tName]) {
             messWithNumber = [db executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber];
+        [weakSelf.delegate tableSearchResult:messWithNumber
+                                       TName:nil
+                                     DataDic:nil];
     }];
 }
 
@@ -320,11 +338,13 @@
         if ([self.searchHisDB tableExists:tName]) {
             messWithNumber = [self.searchHisDB executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber];
+        [weakSelf.delegate tableSearchResult:messWithNumber
+                                       TName:nil
+                                     DataDic:nil];
     }];
 }
 
-- (NSMutableArray *)searchAllTableName {
+- (NSMutableArray *)SearchAllTableName {
     NSMutableArray *tableMessName = [NSMutableArray array];
     FMResultSet  *tableNameSet;
     NSString *searchsql = [NSString stringWithFormat:@"SELECT NAME FROM sqlite_master WHERE type='table' order by name"];
@@ -338,7 +358,7 @@
     return tableMessName;
 }
 
-- (void)searchAllTableNameQueue {
+- (void)SearchAllTableNameQueue {
     if (!dbQueue) {
         dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
     }
@@ -354,7 +374,9 @@
                 [tableMessName addObject:tableStringName];
             }
         }
-        [weakSelf.delegate tableSearchResult:tableMessName];
+        [weakSelf.delegate tableSearchResult:tableMessName
+                                       TName:nil
+                                     DataDic:nil];
     }];
 }
 #pragma mark - 删除表------------------------|*|*|*|*|*|
