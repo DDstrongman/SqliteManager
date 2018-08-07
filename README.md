@@ -8,7 +8,7 @@
 栗子时间：<br>
 ```
 /**
-另起线程根据字典添加数据入库，重复情况delegate返回失败，delegate通知异步处理结果
+另起线程根据模型添加数据入库，重复情况delegate返回失败，delegate通知异步处理结果
 
 @param tName 表名
 @param dataClass 数据的模型类
