@@ -1,15 +1,11 @@
 # SqliteSpec
 
-[![CI Status](http://img.shields.io/travis/DDStrongman/SqliteSpec.svg?style=flat)](https://travis-ci.org/DDStrongman/SqliteSpec)
-[![Version](https://img.shields.io/cocoapods/v/SqliteSpec.svg?style=flat)](http://cocoapods.org/pods/SqliteSpec)
-[![License](https://img.shields.io/cocoapods/l/SqliteSpec.svg?style=flat)](http://cocoapods.org/pods/SqliteSpec)
-[![Platform](https://img.shields.io/cocoapods/p/SqliteSpec.svg?style=flat)](http://cocoapods.org/pods/SqliteSpec)
 
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+对于FMDB增删改查的所有方法的封装，同时支持单线程和多线程方法(queue后缀)，只需要传入NSDictionary或Class即可完成所有的增删改查工作。<br>
+不必再自己写SQL，详细使用方法请参考.h文件，好用请给star，不好用欢迎提建议～
 
 ## Installation
 
