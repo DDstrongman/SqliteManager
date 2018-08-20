@@ -29,6 +29,15 @@
 
 @implementation DDDBSearchHisManager
 
+struct {
+    unsigned int tableReadyResult:1;
+    unsigned int tableInsertResult:1;
+    unsigned int tableSearchResult:1;
+    unsigned int tableUpdateResult:1;
+    unsigned int tableDeleteResult:1;
+    unsigned int dbCloseResult:1;
+} delegateRespondsTo;
+
 + (DDDBSearchHisManager *)ShareInstance{
     static DDDBSearchHisManager *sharedDBManagerInstance = nil;
     static dispatch_once_t predicate;
@@ -104,12 +113,21 @@
                 }];
                 NSString *sql = [NSString stringWithFormat:@"create table %@%@",tName,tempSql];
                 BOOL result = [db executeUpdate:sql];
-                [weakSelf.delegate tableReadyResult:result TName:tName];
+                if (delegateRespondsTo.tableReadyResult) {
+                    [weakSelf.delegate tableReadyResult:result
+                                                  TName:tName];
+                }
             }else {
-                [weakSelf.delegate tableReadyResult:YES TName:tName];
+                if (delegateRespondsTo.tableReadyResult) {
+                    [weakSelf.delegate tableReadyResult:YES
+                                                  TName:tName];
+                }
             }
         }else {
-            [weakSelf.delegate tableReadyResult:NO TName:tName];
+            if (delegateRespondsTo.tableReadyResult) {
+                [weakSelf.delegate tableReadyResult:NO
+                                              TName:tName];
+            }
         }
     }];
 }
@@ -176,18 +194,24 @@
                 DDSS(strongSelf)
                 NSString *insertsql = [strongSelf insertSQL:tName
                                                     DataDic:dataDic];
-                [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
-                                               TName:tName
-                                             DataDic:dataDic];
+                if (delegateRespondsTo.tableInsertResult) {
+                    [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
+                                                   TName:tName
+                                                 DataDic:dataDic];
+                }
             }else {
+                if (delegateRespondsTo.tableInsertResult) {
+                    [weakSelf.delegate tableInsertResult:NO
+                                                   TName:tName
+                                                 DataDic:dataDic];
+                }
+            }
+        }else {
+            if (delegateRespondsTo.tableInsertResult) {
                 [weakSelf.delegate tableInsertResult:NO
                                                TName:tName
                                              DataDic:dataDic];
             }
-        }else {
-            [weakSelf.delegate tableInsertResult:NO
-                                           TName:tName
-                                         DataDic:dataDic];
         }
     }];
 }
@@ -218,23 +242,31 @@
                 if (![searchResult next]) {
                     NSString *insertsql = [strongSelf insertSQL:tName
                                                         DataDic:dataDic];
-                    [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
-                                                   TName:tName
-                                                 DataDic:dataDic];
+                    if (delegateRespondsTo.tableInsertResult) {
+                        [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
+                                                       TName:tName
+                                                     DataDic:dataDic];
+                    }
                 }else {
+                    if (delegateRespondsTo.tableInsertResult) {
+                        [weakSelf.delegate tableInsertResult:NO
+                                                       TName:tName
+                                                     DataDic:dataDic];
+                    }
+                }
+            }else {
+                if (delegateRespondsTo.tableInsertResult) {
                     [weakSelf.delegate tableInsertResult:NO
                                                    TName:tName
                                                  DataDic:dataDic];
                 }
-            }else {
-               [weakSelf.delegate tableInsertResult:NO
-                                              TName:tName
-                                            DataDic:dataDic];
             }
         }else {
-            [weakSelf.delegate tableInsertResult:NO
-                                           TName:tName
-                                         DataDic:dataDic];
+            if (delegateRespondsTo.tableInsertResult) {
+                [weakSelf.delegate tableInsertResult:NO
+                                               TName:tName
+                                             DataDic:dataDic];
+            }
         }
     }];
 }
@@ -278,9 +310,11 @@
         if ([db tableExists:tName]) {
             messWithNumber = [db executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber
-                                       TName:tName
-                                     DataDic:searchDic];
+        if (delegateRespondsTo.tableSearchResult) {
+            [weakSelf.delegate tableSearchResult:messWithNumber
+                                           TName:tName
+                                         DataDic:searchDic];
+        }
     }];
 }
 
@@ -312,9 +346,11 @@
         if ([db tableExists:tName]) {
             messWithNumber = [db executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber
-                                       TName:nil
-                                     DataDic:nil];
+        if (delegateRespondsTo.tableSearchResult) {
+            [weakSelf.delegate tableSearchResult:messWithNumber
+                                           TName:nil
+                                         DataDic:nil];
+        }
     }];
 }
 
@@ -338,9 +374,11 @@
         if ([self.searchHisDB tableExists:tName]) {
             messWithNumber = [self.searchHisDB executeQuery:searchsql];
         }
-        [weakSelf.delegate tableSearchResult:messWithNumber
-                                       TName:nil
-                                     DataDic:nil];
+        if (delegateRespondsTo.tableSearchResult) {
+            [weakSelf.delegate tableSearchResult:messWithNumber
+                                           TName:nil
+                                         DataDic:nil];
+        }
     }];
 }
 
@@ -374,9 +412,11 @@
                 [tableMessName addObject:tableStringName];
             }
         }
-        [weakSelf.delegate tableSearchResult:tableMessName
-                                       TName:nil
-                                     DataDic:nil];
+        if (delegateRespondsTo.tableSearchResult) {
+            [weakSelf.delegate tableSearchResult:tableMessName
+                                           TName:nil
+                                         DataDic:nil];
+        }
     }];
 }
 #pragma mark - 更新表------------------------|*|*|*|*|*|
@@ -414,15 +454,19 @@
                                           SearchDic:searchDic
                                             DataDic:dataDic];
         if ([db tableExists:tName]) {
-            [weakSelf.delegate tableUpdateResult:[db executeUpdate:updateSql]
-                                           TName:tName
-                                          Search:searchDic
-                                         DataDic:dataDic];
+            if (delegateRespondsTo.tableUpdateResult) {
+                [weakSelf.delegate tableUpdateResult:[db executeUpdate:updateSql]
+                                               TName:tName
+                                              Search:searchDic
+                                             DataDic:dataDic];
+            }
         }else {
-            [weakSelf.delegate tableUpdateResult:NO
-                                           TName:tName
-                                          Search:searchDic
-                                         DataDic:dataDic];
+            if (delegateRespondsTo.tableUpdateResult) {
+                [weakSelf.delegate tableUpdateResult:NO
+                                               TName:tName
+                                              Search:searchDic
+                                             DataDic:dataDic];
+            }
         }
     }];
 }
@@ -450,7 +494,10 @@
     DDWS(weakSelf)
     [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         NSString *sqlstr = [NSString stringWithFormat:@"DROP TABLE %@", tName];
-        [weakSelf.delegate tableDeleteResult:[db executeUpdate:sqlstr] TName:tName];
+        if (delegateRespondsTo.tableDeleteResult) {
+            [weakSelf.delegate tableDeleteResult:[db executeUpdate:sqlstr]
+                                           TName:tName];
+        }
     }];
 }
 #pragma mark - 根据sqlKey删除数据------------------------|*|*|*|*|*|
@@ -474,7 +521,10 @@
         DDSS(strongSelf)
         NSString *deleteSQL = [strongSelf deleteSQL:tName
                                           DeleteDic:deleteDic];
-        [weakSelf.delegate tableDeleteResult:[db executeUpdate:deleteSQL] TName:@""];
+        if (delegateRespondsTo.tableDeleteResult) {
+            [weakSelf.delegate tableDeleteResult:[db executeUpdate:deleteSQL]
+                                           TName:tName];
+        }
     }];
 }
 #pragma mark - 关闭数据库------------------------|*|*|*|*|*|
@@ -489,8 +539,23 @@
     DDWS(weakSelf)
     NSString *dbName = dbCName;
     [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
-        [weakSelf.delegate dbCloseResult:[db close] DBName:dbName];
+        if (delegateRespondsTo.dbCloseResult) {
+            [weakSelf.delegate dbCloseResult:[db close]
+                                      DBName:dbName];
+        }
     }];
+}
+#pragma mark - lazy loading统一检查是否响应delegate
+- (void)setDelegate:(id<DDDBManagerDelegate>)delegate {
+    if (_delegate != delegate) {
+        _delegate = delegate;
+        delegateRespondsTo.tableReadyResult = [delegate respondsToSelector:@selector(tableReadyResult:TName:)];
+        delegateRespondsTo.tableDeleteResult = [delegate respondsToSelector:@selector(tableDeleteResult:TName:)];
+        delegateRespondsTo.tableInsertResult = [delegate respondsToSelector:@selector(tableInsertResult:TName:DataDic:)];
+        delegateRespondsTo.tableSearchResult = [delegate respondsToSelector:@selector(tableSearchResult:TName:DataDic:)];
+        delegateRespondsTo.tableUpdateResult = [delegate respondsToSelector:@selector(tableUpdateResult:TName:Search:DataDic:)];
+        delegateRespondsTo.dbCloseResult = [delegate respondsToSelector:@selector(dbCloseResult:DBName:)];
+    }
 }
 #pragma mark - support methods------------------------|*|*|*|*|*|
 /* 获取对象的所有属性名数组 */
