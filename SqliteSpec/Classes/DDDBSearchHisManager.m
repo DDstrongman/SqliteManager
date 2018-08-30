@@ -198,6 +198,8 @@ struct {
                     [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
                                                    TName:tName
                                                  DataDic:dataDic];
+                }else {
+                    [db executeUpdate:insertsql];
                 }
             }else {
                 if (delegateRespondsTo.tableInsertResult) {
@@ -246,6 +248,8 @@ struct {
                         [weakSelf.delegate tableInsertResult:[db executeUpdate:insertsql]
                                                        TName:tName
                                                      DataDic:dataDic];
+                    }else {
+                        [db executeUpdate:insertsql];
                     }
                 }else {
                     if (delegateRespondsTo.tableInsertResult) {
@@ -459,6 +463,8 @@ struct {
                                                TName:tName
                                               Search:searchDic
                                              DataDic:dataDic];
+            }else {
+                [db executeUpdate:updateSql];
             }
         }else {
             if (delegateRespondsTo.tableUpdateResult) {
@@ -497,6 +503,8 @@ struct {
         if (delegateRespondsTo.tableDeleteResult) {
             [weakSelf.delegate tableDeleteResult:[db executeUpdate:sqlstr]
                                            TName:tName];
+        }else {
+            [db executeUpdate:sqlstr];
         }
     }];
 }
@@ -524,6 +532,8 @@ struct {
         if (delegateRespondsTo.tableDeleteResult) {
             [weakSelf.delegate tableDeleteResult:[db executeUpdate:deleteSQL]
                                            TName:tName];
+        }else {
+            [db executeUpdate:deleteSQL];
         }
     }];
 }
@@ -542,6 +552,8 @@ struct {
         if (delegateRespondsTo.dbCloseResult) {
             [weakSelf.delegate dbCloseResult:[db close]
                                       DBName:dbName];
+        }else {
+            [db close];
         }
     }];
 }
