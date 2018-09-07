@@ -1,4 +1,4 @@
-# SqliteSpec
+# SqliteManager
 
 
 ## Example
@@ -19,7 +19,7 @@
 
 ## Installation
 
-SqliteSpec is available through [CocoaPods](http://cocoapods.org). To install
+SqliteManager is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
@@ -32,4 +32,4 @@ DDStrongman, lishengshu232@gmail.com
 
 ## License
 
-SqliteSpec is available under the MIT license. See the LICENSE file for more info.
+SqliteManager is available under the MIT license. See the LICENSE file for more info.

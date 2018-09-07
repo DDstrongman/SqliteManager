@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DDSqliteManager'
-  s.version          = '1.3.3'
+  s.version          = '1.3.4'
   s.summary          = 'FMDB Manager'
 
 # This description is used to generate tags and improve search results.
@@ -22,22 +22,13 @@ TODO: Add long description of the pod here.
                        DESC
 
   s.homepage         = 'https://github.com/DDstrongman/SqliteManager'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'DDStrongman' => 'lishengshu232@gmail.com' }
   s.source           = { :git => 'https://github.com/DDstrongman/SqliteManager.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'SqliteSpec/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'SqliteSpec' => ['SqliteSpec/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'FMDB'
   s.dependency 'MJExtension'
 end

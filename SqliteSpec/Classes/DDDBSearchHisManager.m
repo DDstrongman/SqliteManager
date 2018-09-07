@@ -642,9 +642,9 @@ struct {
     }];
     NSString *searchSQL;
     if ([tempString isEqualToString:@""]) {
-        searchSQL = [NSString stringWithFormat:@"SEARCH * FROM %@",tName];
+        searchSQL = [NSString stringWithFormat:@"SELECT * FROM %@",tName];
     }else {
-        searchSQL = [NSString stringWithFormat:@"SEARCH * FROM %@ WHERE %@",tName,tempString];
+        searchSQL = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@",tName,tempString];
     }
     return searchSQL;
 }
