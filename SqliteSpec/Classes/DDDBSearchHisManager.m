@@ -72,7 +72,7 @@ struct {
     if (![self isDBReady])
         return NO;
     if(![self.searchHisDB tableExists:tName]) {
-        __block NSString *tempSql = @"(key INTEGER PRIMARY KEY AUTOINCREMENT";
+        __block NSString *tempSql = @"(ddkey INTEGER PRIMARY KEY AUTOINCREMENT";
         [keyArr enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if(idx < keyArr.count - 1) {
                 tempSql = [NSString stringWithFormat:@"%@,%@ TEXT",tempSql,obj];
@@ -103,7 +103,7 @@ struct {
     [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         if (db && [db open]) {
             if(![db tableExists:tName]) {
-                __block NSString *tempSql = @"(key INTEGER PRIMARY KEY AUTOINCREMENT";
+                __block NSString *tempSql = @"(ddkey INTEGER PRIMARY KEY AUTOINCREMENT";
                 [keyArr enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     if(idx < keyArr.count - 1) {
                         tempSql = [NSString stringWithFormat:@"%@,%@ TEXT",tempSql,obj];
@@ -331,7 +331,7 @@ struct {
 - (FMResultSet *)SearchLastNumber:(NSString *)tableName
                            Number:(long)number {
     FMResultSet *messWithNumber;
-    NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@ order by key DESC limit 0,%ld",tableName,number];
+    NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@ order by ddkey DESC limit 0,%ld",tableName,number];
     if ([self.searchHisDB tableExists:tableName]) {
         messWithNumber = [self.searchHisDB executeQuery:searchsql];
     }
@@ -346,7 +346,7 @@ struct {
     DDWS(weakSelf)
     [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         FMResultSet *messWithNumber;
-        NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@ order by key DESC limit 0,%ld",tName,number];
+        NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@ order by ddkey DESC limit 0,%ld",tName,number];
         if ([db tableExists:tName]) {
             messWithNumber = [db executeQuery:searchsql];
         }
