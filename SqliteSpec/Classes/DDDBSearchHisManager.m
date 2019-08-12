@@ -471,7 +471,7 @@ struct {
 }
 
 - (void)SearchAllQueue:(NSString *)tName
-                result:(void(^)(FMResultSet *))resultBlock {
+                result:(void(^)(FMResultSet *result))resultBlock {
     if (!dbQueue) {
         dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
     }
@@ -479,8 +479,8 @@ struct {
     [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
         FMResultSet *messWithNumber;
         NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@",tName];
-        if ([self.searchHisDB tableExists:tName]) {
-            messWithNumber = [self.searchHisDB executeQuery:searchsql];
+        if ([weakSelf.searchHisDB tableExists:tName]) {
+            messWithNumber = [weakSelf.searchHisDB executeQuery:searchsql];
         }
         if (resultBlock) {
             resultBlock(messWithNumber);

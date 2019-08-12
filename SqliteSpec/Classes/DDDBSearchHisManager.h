@@ -314,7 +314,7 @@
  @param resultBlock result block
  */
 - (void)SearchAllQueue:(NSString *)tName
-                result:(void(^)(FMResultSet *))resultBlock;
+                result:(void(^)(FMResultSet *result))resultBlock;
 /**
  获取当前打开的本地数据库的所有表名，返回数组
 
