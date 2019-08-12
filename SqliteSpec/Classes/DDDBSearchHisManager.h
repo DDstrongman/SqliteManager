@@ -104,7 +104,7 @@
  @return 返回是否成功的bool
  */
 - (BOOL)isTableExist:(NSString *)tName
-             TKeyArr:(NSArray *)keyArr;
+             tKeyArr:(NSArray *)keyArr;
 /**
  检查本地数据库表是否存在，如不存在，以数组作为键名建表，默认主键名为key，NSInteger类型自增长
  
@@ -113,7 +113,7 @@
  @return 返回是否成功的bool
  */
 - (BOOL)isTableExist:(NSString *)tName
-              TModel:(Class)tableClass;
+              tModel:(Class)tableClass;
 
 /**
  另起线程检查本地数据库表是否存在，如不存在，以数组作为键名建表，默认主键名为key，NSInteger类型自增长，通过delegate通知异步处理结果
@@ -122,16 +122,37 @@
  @param keyArr 表结构
  */
 - (void)isTableExistQueue:(NSString *)tName
-                  TKeyArr:(NSArray *)keyArr;
+                  tKeyArr:(NSArray *)keyArr;
+/**
+ 另起线程检查本地数据库表是否存在，如不存在，以数组作为键名建表，默认主键名为key，NSInteger类型自增长，通过block通知异步处理结果
+ 
+ @param tName 表名
+ @param keyArr 表结构
+ @param resultBlock 创建成功后block
+ */
+- (void)isTableExistQueue:(NSString *)tName
+                  tKeyArr:(NSArray *)keyArr
+                   result:(void(^)(BOOL result))resultBlock;
 
 /**
  另起线程检查本地数据库表是否存在，如不存在，以传入的Model模型作为键名建表，默认主键名为key，NSInteger类型自增长，通过delegate通知异步处理结果
 
  @param tName 表名
- @param tableClass 模型
+ @param tableClass 模型类
  */
 - (void)isTableExistQueue:(NSString *)tName
-                   TModel:(Class)tableClass;
+                   tModel:(Class)tableClass;
+
+/**
+ 另起线程检查本地数据库表是否存在，如不存在，以传入的Model模型作为键名建表，默认主键名为key，NSInteger类型自增长，通过block通知异步处理结果
+ 
+ @param tName 表名
+ @param tableClass 模型
+ @param resultBlock 创建成功后block
+ */
+- (void)isTableExistQueue:(NSString *)tName
+                   tModel:(Class)tableClass
+                   result:(void(^)(BOOL result))resultBlock;
 #pragma mark - 数据库插入更新操作------------------------|*|*|*|*|*|
 /**
  根据字典添加数据入库，如果不存在，则新增，如果已存在，返回no
@@ -141,7 +162,7 @@
  @return 返回结果bool，成功与否
  */
 - (BOOL)insertTableObj:(NSString *)tName
-               DataDic:(NSDictionary *)dataDic;
+               dataDic:(NSDictionary *)dataDic;
 /**
  根据字典添加数据入库，如果不存在，则新增，如果已存在，返回no
  
@@ -150,7 +171,7 @@
  @return 返回结果bool，成功与否
  */
 - (BOOL)insertTableObj:(NSString *)tName
-             DataModel:(Class)dataClass;
+             dataModel:(Class)dataClass;
 /**
  根据字典添加数据入库，直接新增，不管重复
  
@@ -159,7 +180,7 @@
  @return 返回结果bool，成功与否
  */
 - (BOOL)directInsertTableObj:(NSString *)tName
-                     DataDic:(NSDictionary *)dataDic;
+                     dataDic:(NSDictionary *)dataDic;
 /**
  根据模型添加数据入库，直接新增，不管重复
  
@@ -168,7 +189,7 @@
  @return 返回结果bool，成功与否
  */
 - (BOOL)directInsertTableObj:(NSString *)tName
-                   DataModel:(Class)dataClass;
+                   dataModel:(Class)dataClass;
 /**
  另起线程根据字典直接添加数据入库，不考虑重复情况，delegate通知异步处理结果
 
@@ -178,6 +199,16 @@
 - (void)directInsertTableObjQueue:(NSString *)tName
                           DataDic:(NSDictionary *)dataDic;
 /**
+ 另起线程根据字典直接添加数据入库，不考虑重复情况，block通知异步处理结果
+ 
+ @param tName 表名
+ @param dataDic 字典名
+ @param resultBlock 插入结果block
+ */
+- (void)directInsertTableObjQueue:(NSString *)tName
+                          dataDic:(NSDictionary *)dataDic
+                           result:(void(^)(BOOL result))resultBlock;
+/**
  另起线程根据字典直接添加数据入库，不考虑重复情况，delegate通知异步处理结果
  
  @param tName 表名
@@ -185,6 +216,16 @@
  */
 - (void)directInsertTableObjQueue:(NSString *)tName
                         DataModel:(Class)dataClass;
+/**
+ 另起线程根据字典直接添加数据入库，不考虑重复情况，block通知异步处理结果
+ 
+ @param tName 表名
+ @param dataClass 数据的模型类
+ @param resultBlock 插入结果block
+ */
+- (void)directInsertTableObjQueue:(NSString *)tName
+                        dataModel:(NSObject *)dataClass
+                           result:(void(^)(BOOL result))resultBlock;
 /**
  根据字典直接添加数据入库，如果不存在，则新增，如果已存在，delegate返回失败，另起线程
 
@@ -266,6 +307,14 @@
  @param tName 要获取的表名
  */
 - (void)SearchAllQueue:(NSString *)tName;
+/**
+ 异步搜索并返回某一表的所有字段数值,block返回结果
+ 
+ @param tName 要获取的表名
+ @param resultBlock result block
+ */
+- (void)SearchAllQueue:(NSString *)tName
+                result:(void(^)(FMResultSet *))resultBlock;
 /**
  获取当前打开的本地数据库的所有表名，返回数组
 
@@ -350,6 +399,16 @@
  */
 - (void)deleTableOjbQueue:(NSString *)tName
                 DeleteDic:(NSDictionary *)deleteDic;
+/**
+ 根据数据库某一字段异步删除某一条记录，block返回结果
+ 
+ @param tName 要删除的表名
+ @param deleteDic 要删除的条件字典
+ @param resultBlock result block
+ */
+- (void)deleTableOjbQueue:(NSString *)tName
+                deleteDic:(NSDictionary *)deleteDic
+                   result:(void(^)(BOOL result))resultBlock;
 #pragma mark - 关闭数据库------------------------|*|*|*|*|*|
 /**
  关闭数据库

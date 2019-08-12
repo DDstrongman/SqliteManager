@@ -68,7 +68,7 @@ struct {
 }
 #pragma mark - 判断表是否存在,不存在则创建表------------------------|*|*|*|*|*|
 - (BOOL)isTableExist:(NSString *)tName
-             TKeyArr:(NSArray *)keyArr {
+             tKeyArr:(NSArray *)keyArr {
     if (![self isDBReady])
         return NO;
     if(![self.searchHisDB tableExists:tName]) {
@@ -88,14 +88,14 @@ struct {
 }
 
 - (BOOL)isTableExist:(NSString *)tName
-              TModel:(Class)tableClass {
-    NSArray *proArr = [self getAllPropertiesNameArr:[tableClass class]];
+              tModel:(Class)tableClass {
+    NSArray *proArr = [self getAllPropertiesNameArr:tableClass];
     return [self isTableExist:tName
-                      TKeyArr:proArr];
+                      tKeyArr:proArr];
 }
 
 - (void)isTableExistQueue:(NSString *)tName
-                  TKeyArr:(NSArray *)keyArr {
+                  tKeyArr:(NSArray *)keyArr {
     if (!dbQueue) {
         dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
     }
@@ -133,14 +133,59 @@ struct {
 }
 
 - (void)isTableExistQueue:(NSString *)tName
-                   TModel:(Class)tableClass {
-    NSArray *proArr = [self getAllPropertiesNameArr:[tableClass class]];
+                  tKeyArr:(NSArray *)keyArr
+                   result:(void(^)(BOOL result))resultBlock {
+    if (!dbQueue) {
+        dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
+    }
+    DDWS(weakSelf)
+    [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        if (db && [db open]) {
+            if(![db tableExists:tName]) {
+                __block NSString *tempSql = @"(ddkey INTEGER PRIMARY KEY AUTOINCREMENT";
+                [keyArr enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if(idx < keyArr.count - 1) {
+                        tempSql = [NSString stringWithFormat:@"%@,%@ TEXT",tempSql,obj];
+                    }else {
+                        tempSql = [NSString stringWithFormat:@"%@,%@ TEXT)",tempSql,obj];
+                    }
+                }];
+                NSString *sql = [NSString stringWithFormat:@"create table %@%@",tName,tempSql];
+                BOOL result = [db executeUpdate:sql];
+                if (resultBlock) {
+                    resultBlock(result);
+                }
+            }else {
+                if (resultBlock) {
+                    resultBlock(YES);
+                }
+            }
+        }else {
+            if (resultBlock) {
+                resultBlock(NO);
+            }
+        }
+    }];
+}
+
+- (void)isTableExistQueue:(NSString *)tName
+                   tModel:(Class)tableClass {
+    NSArray *proArr = [self getAllPropertiesNameArr:tableClass];
     [self isTableExistQueue:tName
-                    TKeyArr:proArr];
+                    tKeyArr:proArr];
+}
+
+- (void)isTableExistQueue:(NSString *)tName
+                   tModel:(Class)tableClass
+                   result:(void(^)(BOOL result))resultBlock {
+    NSArray *proArr = [self getAllPropertiesNameArr:tableClass];
+    [self isTableExistQueue:tName
+                    tKeyArr:proArr
+                     result:resultBlock];
 }
 #pragma mark - 插入列表 或者更新------------------------|*|*|*|*|*|
 - (BOOL)insertTableObj:(NSString *)tName
-               DataDic:(NSDictionary *)dataDic {
+               dataDic:(NSDictionary *)dataDic {
     NSArray *keyArr = [dataDic allKeys];
     if ([self.searchHisDB tableExists:tName]) {
         if (keyArr.count > 0) {
@@ -157,13 +202,13 @@ struct {
 }
 
 - (BOOL)insertTableObj:(NSString *)tName
-             DataModel:(Class)dataClass {
+             dataModel:(Class)dataClass {
     return [self insertTableObj:tName
-                        DataDic:dataClass.mj_keyValues];
+                        dataDic:dataClass.mj_keyValues];
 }
 
 - (BOOL)directInsertTableObj:(NSString *)tName
-                     DataDic:(NSDictionary *)dataDic {
+                     dataDic:(NSDictionary *)dataDic {
     NSArray *keyArr = [dataDic allKeys];
     if ([self.searchHisDB tableExists:tName]) {
         if (keyArr.count > 0) {
@@ -176,9 +221,9 @@ struct {
 }
 
 - (BOOL)directInsertTableObj:(NSString *)tName
-                   DataModel:(Class)dataClass {
+                   dataModel:(Class)dataClass {
     return [self directInsertTableObj:tName
-                              DataDic:dataClass.mj_keyValues];
+                              dataDic:dataClass.mj_keyValues];
 }
 
 - (void)directInsertTableObjQueue:(NSString *)tName
@@ -219,9 +264,48 @@ struct {
 }
 
 - (void)directInsertTableObjQueue:(NSString *)tName
+                          dataDic:(NSDictionary *)dataDic
+                           result:(void(^)(BOOL result))resultBlock {
+    NSArray *keyArr = [dataDic allKeys];
+    if (!dbQueue) {
+        dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
+    }
+    DDWS(weakSelf)
+    [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        if ([db tableExists:tName]) {
+            if (keyArr.count > 0) {
+                DDSS(strongSelf)
+                NSString *insertsql = [strongSelf insertSQL:tName
+                                                    DataDic:dataDic];
+                BOOL result = [db executeUpdate:insertsql];
+                if (resultBlock) {
+                    resultBlock(result);
+                }
+            }else {
+                if (resultBlock) {
+                    resultBlock(NO);
+                }
+            }
+        }else {
+            if (resultBlock) {
+                resultBlock(NO);
+            }
+        }
+    }];
+}
+
+- (void)directInsertTableObjQueue:(NSString *)tName
                         DataModel:(Class)dataClass {
     [self directInsertTableObjQueue:tName
                             DataDic:dataClass.mj_keyValues];
+}
+
+- (void)directInsertTableObjQueue:(NSString *)tName
+                        dataModel:(NSObject *)dataClass
+                           result:(void(^)(BOOL result))resultBlock {
+    [self directInsertTableObjQueue:tName
+                            dataDic:dataClass.mj_keyValues
+                             result:resultBlock];
 }
 
 - (void)insertTableObjQueue:(NSString *)tName
@@ -386,6 +470,24 @@ struct {
     }];
 }
 
+- (void)SearchAllQueue:(NSString *)tName
+                result:(void(^)(FMResultSet *))resultBlock {
+    if (!dbQueue) {
+        dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
+    }
+    DDWS(weakSelf)
+    [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        FMResultSet *messWithNumber;
+        NSString *searchsql = [NSString stringWithFormat:@"SELECT * FROM %@",tName];
+        if ([self.searchHisDB tableExists:tName]) {
+            messWithNumber = [self.searchHisDB executeQuery:searchsql];
+        }
+        if (resultBlock) {
+            resultBlock(messWithNumber);
+        }
+    }];
+}
+
 - (NSMutableArray *)SearchAllTableName {
     NSMutableArray *tableMessName = [NSMutableArray array];
     FMResultSet  *tableNameSet;
@@ -534,6 +636,24 @@ struct {
                                            TName:tName];
         }else {
             [db executeUpdate:deleteSQL];
+        }
+    }];
+}
+
+- (void)deleTableOjbQueue:(NSString *)tName
+                deleteDic:(NSDictionary *)deleteDic
+                   result:(void(^)(BOOL result))resultBlock {
+    if (!dbQueue) {
+        dbQueue = [[FMDatabaseQueue alloc]initWithPath:dbPath];
+    }
+    DDWS(weakSelf)
+    [dbQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        DDSS(strongSelf)
+        NSString *deleteSQL = [strongSelf deleteSQL:tName
+                                          DeleteDic:deleteDic];
+        BOOL result = [db executeUpdate:deleteSQL];
+        if (resultBlock) {
+            resultBlock(result);
         }
     }];
 }
