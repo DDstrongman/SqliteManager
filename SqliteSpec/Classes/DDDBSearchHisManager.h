@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FMDB.h>
+#import <FMDB/FMDB.h>
 
 @protocol DDDBManagerDelegate <NSObject>
 
